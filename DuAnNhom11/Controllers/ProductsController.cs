@@ -22,13 +22,17 @@ namespace DuAnNhom11.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-              return _context.Product != null ? 
-                          View(await _context.Product.ToListAsync()) :
-                          Problem("Entity set 'DuAnNhom11Context.Product'  is null.");
+            var duAnNhom11Context = _context.Product.Include(p => p.Brand).Include(p => p.Category);
+            return View(await duAnNhom11Context.ToListAsync());
         }
+		public async Task<IActionResult> ProductByCategory(int catId)
+		{
+			var duAnNhom11Context = _context.Product.Include(p => p.Brand).Include(p => p.Category).Where(p=>p.CategoryId == catId);
+			return View(await duAnNhom11Context.ToListAsync());
+		}
 
-        // GET: Products/Details/5
-        public async Task<IActionResult> Details(int? id)
+		// GET: Products/Details/5
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Product == null)
             {
@@ -36,6 +40,8 @@ namespace DuAnNhom11.Controllers
             }
 
             var product = await _context.Product
+                .Include(p => p.Brand)
+                .Include(p => p.Category)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
@@ -48,6 +54,8 @@ namespace DuAnNhom11.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
+            ViewData["BrandId"] = new SelectList(_context.Brand, "BrandId", "BrandDescription");
+            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryDescription");
             return View();
         }
 
@@ -56,7 +64,7 @@ namespace DuAnNhom11.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ProductPrice,ProductDescription,ProductQuantity,ProductImage")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ProductPrice,ProductDescription,ProductQuantity,ProductImage,CategoryId,BrandId")] Product product)
         {
             if (ModelState.IsValid)
             {
@@ -64,6 +72,8 @@ namespace DuAnNhom11.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["BrandId"] = new SelectList(_context.Brand, "BrandId", "BrandDescription", product.BrandId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryDescription", product.CategoryId);
             return View(product);
         }
 
@@ -80,6 +90,8 @@ namespace DuAnNhom11.Controllers
             {
                 return NotFound();
             }
+            ViewData["BrandId"] = new SelectList(_context.Brand, "BrandId", "BrandDescription", product.BrandId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryDescription", product.CategoryId);
             return View(product);
         }
 
@@ -88,7 +100,7 @@ namespace DuAnNhom11.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ProductPrice,ProductDescription,ProductQuantity,ProductImage")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ProductPrice,ProductDescription,ProductQuantity,ProductImage,CategoryId,BrandId")] Product product)
         {
             if (id != product.ProductId)
             {
@@ -115,6 +127,8 @@ namespace DuAnNhom11.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["BrandId"] = new SelectList(_context.Brand, "BrandId", "BrandDescription", product.BrandId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryDescription", product.CategoryId);
             return View(product);
         }
 
@@ -127,6 +141,8 @@ namespace DuAnNhom11.Controllers
             }
 
             var product = await _context.Product
+                .Include(p => p.Brand)
+                .Include(p => p.Category)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {

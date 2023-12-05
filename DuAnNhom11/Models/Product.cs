@@ -19,8 +19,10 @@ namespace DuAnNhom11.Models
         public string? ProductImage { get; set; }
 
         [ForeignKey("CategoryId")]
+        public int CategoryId { get; set; }
         public Category? Category { get; set; }
         [ForeignKey("BrandId")]
+        public int BrandId { get; set; }
         public Brand? Brand { get; set; }
     }
 }
