@@ -30,6 +30,41 @@ namespace DuAnNhom11.Controllers
 			var duAnNhom11Context = _context.Product.Include(p => p.Brand).Include(p => p.Category).Where(p=>p.CategoryId == catId);
 			return View(await duAnNhom11Context.ToListAsync());
 		}
+        public async Task<IActionResult> ProductSearch(string searchString)
+        {
+            if (_context.Product == null)
+            {
+                return Problem("Entity set 'MvcMovieContext.Movie'  is null.");
+            }
+
+            var products = from m in _context.Product
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(s => s.ProductName!.Contains(searchString));
+            }
+
+            return View(await products.ToListAsync());
+        }
+        public async Task<IActionResult> ProductDetails(int? id)
+		{
+			if (id == null || _context.Product == null)
+			{
+				return NotFound();
+			}
+
+			var product = await _context.Product
+				.Include(p => p.Brand)
+				.Include(p => p.Category)
+				.FirstOrDefaultAsync(m => m.ProductId == id);
+			if (product == null)
+			{
+				return NotFound();
+			}
+
+			return View(product);
+		}
 
 		// GET: Products/Details/5
 		public async Task<IActionResult> Details(int? id)

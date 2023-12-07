@@ -49,8 +49,7 @@
 				</ul>
 				<ul class="header-links pull-right">
 					<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
-					<li><a href="/Account/Login"><i class="fa fa-user-o"></i> My Account</a></li>
-					<li><a href="/Admin/Index"><i class="fa fa-user-o"></i> Admin Area</a></li>
+					<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
 				</ul>
 			</div>
 		</div>
@@ -160,32 +159,54 @@
 	<!-- /HEADER -->
 	<!-- NAVIGATION -->
 	@(await Component.InvokeAsync("_Category"))
-	<!-- /NAVIGATION -->
-	<!-- SECTION -->
-	<div class="section">
+	<div id="breadcrumb" class="section">
 		<!-- container -->
 		<div class="container">
 			<!-- row -->
 			<div class="row">
-
-				<!-- section title -->
 				<div class="col-md-12">
-					<div class="section-title">
-						<h3 class="title">New Products</h3>
-					</div>
+					<ul class="breadcrumb-tree">
+						<li><a href="#">Home</a></li>
+						<li><a href="#">All Categories</a></li>
+						<li><a href="#">Accessories</a></li>
+						<li class="active">Headphones (227,490 Results)</li>
+					</ul>
 				</div>
-				<!-- /section title -->
-				<!-- Products tab & slick -->
-				@RenderBody()
-				<!-- Products tab & slick -->
 			</div>
 			<!-- /row -->
 		</div>
 		<!-- /container -->
 	</div>
+	<!-- /NAVIGATION -->
+	<div class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<!-- ASIDE -->
+				
+				<!-- /ASIDE -->
+				<!-- STORE -->
+				<div id="store" class="col-md-12">
+					<!-- store top filter -->
+					
+					<!-- /store top filter -->
+					<!-- store products -->
+					@RenderBody()
+					<!-- /store products -->
+					<!-- store bottom filter -->
+					
+					<!-- /store bottom filter -->
+				</div>
+				<!-- /STORE -->
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- SECTION -->
+	
 	<!-- /SECTION -->
-
-
 	<!-- FOOTER -->
 	<footer id="footer">
 		<!-- top footer -->
